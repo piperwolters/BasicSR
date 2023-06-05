@@ -124,6 +124,7 @@ def train_pipeline(root_path):
 
     # create model
     model = build_model(opt)
+    print("TESTING")
     print("building model:", model)
     if resume_state:  # resume training
         model.resume_training(resume_state)  # handle optimizers and schedulers
