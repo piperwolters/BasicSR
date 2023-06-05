@@ -182,17 +182,12 @@ def train_pipeline(root_path):
                 msg_logger(log_vars)
 
             # save models and training states
-            #if current_iter % opt['logger']['save_checkpoint_freq'] == 0:
-            print("opt logger checkpoing freq:", opt['logger']['save_checkpoint_freq'])
-            if True:
+            if current_iter % opt['logger']['save_checkpoint_freq'] == 0:
                 logger.info('Saving models and training states.')
                 model.save(epoch, current_iter)
 
             # validation
-            #if opt.get('val') is not None and (current_iter % opt['val']['val_freq'] == 0):
-            print("opt.get(val):", opt.get('val'), " and current iter:", current_iter, " and val_freq:", opt['val']['val_freq'])
-            print("len(val_loaders:", len(val_loaders))
-            if True:
+            if opt.get('val') is not None and (current_iter % opt['val']['val_freq'] == 0):
                 if len(val_loaders) > 1:
                     logger.warning('Multiple validation datasets are *only* supported by SRModel.')
                 for val_loader in val_loaders:
