@@ -93,8 +93,6 @@ def train_pipeline(root_path):
     opt, args = parse_options(root_path, is_train=True)
     opt['root_path'] = root_path
 
-    print("testing...in train_pipeline locally...")
-
     torch.backends.cudnn.benchmark = True
     # torch.backends.cudnn.deterministic = True
 
@@ -124,7 +122,6 @@ def train_pipeline(root_path):
 
     # create model
     model = build_model(opt)
-    print("TESTING")
     print("building model:", model)
     if resume_state:  # resume training
         model.resume_training(resume_state)  # handle optimizers and schedulers
@@ -194,6 +191,7 @@ def train_pipeline(root_path):
             # validation
             #if opt.get('val') is not None and (current_iter % opt['val']['val_freq'] == 0):
             print("opt.get(val):", opt.get('val'), " and current iter:", current_iter, " and val_freq:", opt['val']['val_freq'])
+            print("len(val_loaders:", len(val_loaders))
             if True:
                 if len(val_loaders) > 1:
                     logger.warning('Multiple validation datasets are *only* supported by SRModel.')
