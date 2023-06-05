@@ -93,6 +93,8 @@ def train_pipeline(root_path):
     opt, args = parse_options(root_path, is_train=True)
     opt['root_path'] = root_path
 
+    print("testing...in train_pipeline locally...")
+
     torch.backends.cudnn.benchmark = True
     # torch.backends.cudnn.deterministic = True
 
@@ -122,6 +124,7 @@ def train_pipeline(root_path):
 
     # create model
     model = build_model(opt)
+    print("building model:", model)
     if resume_state:  # resume training
         model.resume_training(resume_state)  # handle optimizers and schedulers
         logger.info(f"Resuming training from epoch: {resume_state['epoch']}, iter: {resume_state['iter']}.")
