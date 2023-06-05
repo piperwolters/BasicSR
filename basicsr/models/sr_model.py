@@ -202,7 +202,7 @@ class SRModel(BaseModel):
         for idx, val_data in enumerate(dataloader):
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
             img_name = str(val_data['Index'])
-            self.feed_data(val_data['lq'])
+            self.feed_data(val_data)
             self.test()
 
             visuals = self.get_current_visuals()
