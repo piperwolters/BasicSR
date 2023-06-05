@@ -103,22 +103,17 @@ class RRDBNet(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
     def forward(self, x):
-        print("x:", x.shape)
         if self.scale == 2:
             feat = pixel_unshuffle(x, scale=2)
         elif self.scale == 1:
             feat = pixel_unshuffle(x, scale=4)
         else:
             feat = x
-        print("self.scale:", self.scale, " & feat:", feat.shape)
         feat = self.conv_first(feat)
-        print("feat:", feat.shape)
         body_feat = self.conv_body(self.body(feat))
-        print("body feat:", body_feat.shape)
         feat = feat + body_feat
-        print("feat again:", feat.shape)
         # upsample
-        feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=1, mode='nearest')))
-        feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=1, mode='nearest')))
+        feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
         out = self.conv_last(self.lrelu(self.conv_hr(feat)))
         return out
