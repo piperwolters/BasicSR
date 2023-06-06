@@ -116,10 +116,9 @@ class RRDBNet(nn.Module):
         # upsample
         feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
         feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
-        print("before:", feat.shape)
+
         # Uncomment this if you want x8 upsampling
         feat = self.lrelu(self.conv_up3(F.interpolate(feat, scale_factor=2, mode='nearest')))
-        print("after:", feat.shape)
 
         out = self.conv_last(self.lrelu(self.conv_hr(feat)))
         return out
