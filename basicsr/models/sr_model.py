@@ -201,10 +201,9 @@ class SRModel(BaseModel):
 
         for idx, val_data in enumerate(dataloader):
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
+
             # TODO: need to deal with batch sizes here
-            img_names = []
-            for ii,img_idx in enumerate(val_data['Index']):
-                img_names.append(str(img_idx.item()))
+            img_name = str(val_data['Index'].item())
 
             self.feed_data(val_data)
             self.test()
@@ -223,19 +222,17 @@ class SRModel(BaseModel):
             torch.cuda.empty_cache()
 
             if save_img:
-                for ii,img_name in enumerate(img_names):
-                    if self.opt['is_train']:
-                        save_img_path = osp.join(self.opt['path']['visualization'], img_name,
-                                                 f'{img_name}_{current_iter}.png')
+                if self.opt['is_train']:
+                    save_img_path = osp.join(self.opt['path']['visualization'], img_name,
+                                             f'{img_name}_{current_iter}.png')
+                else:
+                    if self.opt['val']['suffix']:
+                        save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
+                                                 f'{img_name}_{self.opt["val"]["suffix"]}.png')
                     else:
-                        if self.opt['val']['suffix']:
-                            save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
-                                                     f'{img_name}_{self.opt["val"]["suffix"]}.png')
-                        else:
-                            save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
-                                                     f'{img_name}_{self.opt["name"]}.png')
-                    print("sr_img:", sr_img.shape, " save path:", save_img_path)
-                    imwrite(sr_img[ii], save_img_path)
+                        save_img_path = osp.join(self.opt['path']['visualization'], dataset_name,
+                                                 f'{img_name}_{self.opt["name"]}.png')
+                imwrite(sr_img, save_img_path)
 
             if with_metrics:
                 # calculate metrics
