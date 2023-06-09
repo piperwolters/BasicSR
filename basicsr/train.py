@@ -45,7 +45,6 @@ def create_train_val_dataloader(opt, logger):
                 # default train sampler in BasicSR
                 train_sampler = EnlargedSampler(train_set, opt['world_size'], opt['rank'], dataset_enlarge_ratio)
 
-            train_sampler = train_set.get_tile_weight_sampler(tile_weights)
             train_loader = build_dataloader(
                 train_set,
                 dataset_opt,
@@ -165,7 +164,8 @@ def train_pipeline(root_path):
     start_time = time.time()
 
     for epoch in range(start_epoch, total_epochs + 1):
-        train_sampler.set_epoch(epoch)
+        # TODO: this should only happen if not using our weighted tile sampler
+        #train_sampler.set_epoch(epoch)
         prefetcher.reset()
         train_data = prefetcher.next()
 
