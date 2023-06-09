@@ -34,6 +34,7 @@ def create_train_val_dataloader(opt, logger):
         if phase == 'train':
             dataset_enlarge_ratio = dataset_opt.get('dataset_enlarge_ratio', 1)
             train_set = build_dataset(dataset_opt)
+            print("dataset opt keys:", dataset_opt.keys())
 
             # tile-weighted sampler
             if 'tile_weights' in dataset_opt['train']:
