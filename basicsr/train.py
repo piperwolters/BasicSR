@@ -34,12 +34,11 @@ def create_train_val_dataloader(opt, logger):
         if phase == 'train':
             dataset_enlarge_ratio = dataset_opt.get('dataset_enlarge_ratio', 1)
             train_set = build_dataset(dataset_opt)
-            print("dataset opt keys:", dataset_opt.keys())
 
             # tile-weighted sampler
-            if 'tile_weights' in dataset_opt['train']:
+            if 'tile_weights' in dataset_opt:
                 print("tile weight sampler")
-                with open(dataset_opt['train']['tile_weights'], 'r') as f:
+                with open(dataset_opt['tile_weights'], 'r') as f:
                     tile_weights = {tile_str: weight for tile_str, weight in json.load(f).items()}
                 train_sampler = train_set.get_tile_weight_sampler(tile_weights=tile_weights)
             else:
