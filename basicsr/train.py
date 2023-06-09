@@ -2,6 +2,7 @@ import datetime
 import logging
 import math
 import time
+import json
 import torch
 from os import path as osp
 
@@ -33,7 +34,18 @@ def create_train_val_dataloader(opt, logger):
         if phase == 'train':
             dataset_enlarge_ratio = dataset_opt.get('dataset_enlarge_ratio', 1)
             train_set = build_dataset(dataset_opt)
-            train_sampler = EnlargedSampler(train_set, opt['world_size'], opt['rank'], dataset_enlarge_ratio)
+
+            # tile-weighted sampler
+            if 'tile_weights' in dataset_opt['train']:
+                print("tile weight sampler")
+                with open(dataset_opt['train']['tile_weights'], 'r') as f:
+                    tile_weights = {tile_str: weight for tile_str, weight in json.load(f).items()}
+                train_sampler = train_set.get_tile_weight_sampler(tile_weights=tile_weights)
+            else:
+                # default train sampler in BasicSR
+                train_sampler = EnlargedSampler(train_set, opt['world_size'], opt['rank'], dataset_enlarge_ratio)
+
+            train_sampler = train_set.get_tile_weight_sampler(tile_weights)
             train_loader = build_dataloader(
                 train_set,
                 dataset_opt,
