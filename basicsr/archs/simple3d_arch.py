@@ -13,7 +13,7 @@ class Simple3DConvNet(nn.Module):
 
         self.conv1 = nn.Conv3d(num_in_ch, num_in_ch+num_grow_ch, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.relu = nn.ReLU()
-        self.pool = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
+        self.pool = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1))
         self.conv2 = nn.Conv3d(num_in_ch+num_grow_ch, num_in_ch+num_grow_ch*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv3 = nn.Conv3d(num_in_ch+num_grow_ch*2, num_in_ch+num_grow_ch*3, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv4 = nn.Conv3d(num_in_ch+num_grow_ch*3, num_in_ch+num_grow_ch*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
