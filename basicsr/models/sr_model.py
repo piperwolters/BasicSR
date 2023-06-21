@@ -201,7 +201,10 @@ class SRModel(BaseModel):
 
         for idx, val_data in enumerate(dataloader):
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
+
+            # TODO: need to deal with batch sizes here
             img_name = str(val_data['Index'].item())
+
             self.feed_data(val_data)
             self.test()
 
