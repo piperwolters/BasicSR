@@ -12,8 +12,11 @@ class Simple3DConvNetII(nn.Module):
         self.conv1 = nn.Conv3d(num_in_ch, num_feat, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv15 = nn.Conv3d(num_feat, num_feat, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv3d(num_feat, num_feat*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv25 = nn.Conv3d(num_feat*2, num_feat*2, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv3d(num_feat*2, num_feat*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv35 = nn.Conv3d(num_feat*4, num_feat*4, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv3d(num_feat*4, num_feat*8, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv45 = nn.Conv3d(num_feat*8, num_feat*8, kernel_size=3, stride=1, padding=1)
 
         self.relu = nn.ReLU()
         self.pool = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1))
@@ -27,15 +30,19 @@ class Simple3DConvNetII(nn.Module):
         out = self.pool(self.relu(out))
         
         out = self.conv15(out)
-        out = self.pool(self.relu(out))
         print("conv 1.5?:", out.shape)
 
         out = self.conv2(out)
         out = self.pool(self.relu(out))
+        out = self.conv25(out)
+
         out = self.conv3(out)
         out = self.pool(self.relu(out))
+        out = self.conv35(out)
+
         out = self.conv4(out)
         out = self.pool(self.relu(out))
+        out = self.conv45(out)
 
         out = out.squeeze(2)
 
