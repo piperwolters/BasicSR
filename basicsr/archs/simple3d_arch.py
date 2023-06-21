@@ -8,7 +8,7 @@ from basicsr.utils.registry import ARCH_REGISTRY
 
 @ARCH_REGISTRY.register()
 class Simple3DConvNet(nn.Module):
-    def __init__(self, num_in_ch, num_out_ch, scale=4, num_feat=64, num_block=23, num_grow_ch=32)::
+    def __init__(self, num_in_ch, num_out_ch, scale=4, num_feat=64, num_block=23, num_grow_ch=32):
         super(Simple3DConvNet, self).__init__()
 
         self.conv1 = nn.Conv3d(num_in_chan, num_in_chan+num_grow_ch, kernel_size=3, padding=1)
