@@ -18,11 +18,11 @@ class ResidualDenseBlock(nn.Module):
 
     def __init__(self, num_feat=64, num_grow_ch=32):
         super(ResidualDenseBlock, self).__init__()
-        self.conv1 = nn.Conv3d(num_feat, num_grow_ch, 3, 1, 1)
-        self.conv2 = nn.Conv3d(num_feat + num_grow_ch, num_grow_ch, 3, 1, 1)
-        self.conv3 = nn.Conv3d(num_feat + 2 * num_grow_ch, num_grow_ch, 3, 1, 1)
-        self.conv4 = nn.Conv3d(num_feat + 3 * num_grow_ch, num_grow_ch, 3, 1, 1)
-        self.conv5 = nn.Conv3d(num_feat + 4 * num_grow_ch, num_feat, 3, 1, 1)
+        self.conv1 = nn.Conv3d(num_feat, num_grow_ch, 3, 1, 1, groups=num_feat)
+        self.conv2 = nn.Conv3d(num_feat + num_grow_ch, num_grow_ch, 3, 1, 1, groups=num_feat + num_grow_ch)
+        self.conv3 = nn.Conv3d(num_feat + 2 * num_grow_ch, num_grow_ch, 3, 1, 1, groups=num_feat + 2 * num_grow_ch)
+        self.conv4 = nn.Conv3d(num_feat + 3 * num_grow_ch, num_grow_ch, 3, 1, 1, groups=num_feat + 3 * num_grow_ch)
+        self.conv5 = nn.Conv3d(num_feat + 4 * num_grow_ch, num_feat, 3, 1, 1, groups=num_feat + 4 * num_grow_ch)
 
         self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
