@@ -14,11 +14,9 @@ class Simple3DConvNet(nn.Module):
         self.conv1 = nn.Conv3d(num_in_ch, num_feat, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.relu = nn.ReLU()
         self.pool = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1))
-        self.conv2 = nn.Conv3d(num_feat+num_grow_ch, num_in_ch+num_grow_ch*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv2 = nn.Conv3d(num_feat, num_feat+num_grow_ch*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv3 = nn.Conv3d(num_feat+num_grow_ch*2, num_feat+num_grow_ch*3, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv4 = nn.Conv3d(num_feat+num_grow_ch*3, num_feat+num_grow_ch*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
-
-        self.fc = nn.Linear(32 * 8 * 8 * 8, num_out_ch)
 
     def forward(self, x):
         print("x:", x.shape)
@@ -38,9 +36,9 @@ class Simple3DConvNet(nn.Module):
         print("conv4:", out.shape)
         out = self.pool(self.relu(out))
         print("Pool4 output shape:", out.shape)
-        out = out.view(out.size(0), -1)
-        print("out:", out.shape)
-        out = self.fc(out)
-        print("Final output shape:", out.shape)
+
+        out = out.squeeze(2)
+        print("squeeze:", out.shape)
+
         return out
 
