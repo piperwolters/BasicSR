@@ -10,7 +10,7 @@ class Simple3DConvNetII(nn.Module):
         super(Simple3DConvNetII, self).__init__()
 
         self.conv1 = nn.Conv3d(num_in_ch, num_feat, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
-        self.conv15 = nn.Conv3d(num_feat, num_feat, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv15 = nn.Conv3d(num_feat, num_feat, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv3d(num_feat, num_feat*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv3 = nn.Conv3d(num_feat*2, num_feat*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv4 = nn.Conv3d(num_feat*4, num_feat*8, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
