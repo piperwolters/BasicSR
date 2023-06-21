@@ -18,8 +18,12 @@ class Simple3DConvNet(nn.Module):
         self.conv3 = nn.Conv3d(num_feat+num_grow_ch*2, num_feat+num_grow_ch*3, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.conv4 = nn.Conv3d(num_feat+num_grow_ch*3, num_feat+num_grow_ch*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
 
-        self.up1 = nn.ConvTranspose2d(num_feat+num_grow_ch*4, num_feat+num_grow_ch*2, kernel_size=2, stride=2)
-        self.up2 = nn.ConvTranspose2d(num_feat+num_grow_ch*2, num_feat+num_grow_ch*1, kernel_size=2, stride=2)
+        print("num feat:", num_feat)
+        print("num_feat + num growch * 2:", num_feat+num_grow_ch*2)
+
+        self.up1 = nn.ConvTranspose2d(num_feat+num_grow_ch*4, num_feat+num_grow_ch*2, kernel_size=3, stride=2)
+        self.up2 = nn.ConvTranspose2d(num_feat+num_grow_ch*2, num_feat+num_grow_ch*1, kernel_size=3, stride=2)
+        self.up3 = nn.ConvTranspose2d(num_feat+num_grow_ch*1, 1, 3, 1)
 
         #self.up1 = nn.Conv2d(num_feat+num_grow_ch*4, num_feat+num_grow_ch*3, 3, 1, 1)
         #self.up2 = nn.Conv2d(num_feat+num_grow_ch*3, num_feat+num_grow_ch*2, 3, 1, 1)
@@ -51,6 +55,8 @@ class Simple3DConvNet(nn.Module):
         print("up1:", up.shape)
         up = self.up2(up)
         print("up2:", up.shape)
+        up = self.up3(up)
+        print("up3:", up.shape)
 
         return out
 
