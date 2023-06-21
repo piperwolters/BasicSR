@@ -50,7 +50,7 @@ class Simple3DConvNetII(nn.Module):
         print("Conv 3.5:", out.shape)
 
         out = self.conv4(out)
-        print("Conv4:", out.shape))
+        print("Conv4:", out.shape)
         out = self.pool(self.relu(out))
         print("Pool4:", out.shape)
         out = self.conv45(out)
