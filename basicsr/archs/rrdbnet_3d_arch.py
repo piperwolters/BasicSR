@@ -64,7 +64,7 @@ class RRDB(nn.Module):
 
 
 @ARCH_REGISTRY.register()
-class RRDBNet(nn.Module):
+class RRDBNet3D(nn.Module):
     """Networks consisting of Residual in Residual Dense Block, which is used
     in ESRGAN.
 
