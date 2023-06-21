@@ -14,15 +14,16 @@ class Simple3DConvNet(nn.Module):
         self.conv1 = nn.Conv3d(num_in_ch, num_feat, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
         self.relu = nn.ReLU()
         self.pool = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1))
-        self.conv2 = nn.Conv3d(num_feat, num_feat+num_grow_ch*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
-        self.conv3 = nn.Conv3d(num_feat+num_grow_ch*2, num_feat+num_grow_ch*3, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
-        self.conv4 = nn.Conv3d(num_feat+num_grow_ch*3, num_feat+num_grow_ch*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv2 = nn.Conv3d(num_feat, num_feat*2, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv3 = nn.Conv3d(num_feat*2, num_feat*4, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
+        self.conv4 = nn.Conv3d(num_feat*4, num_feat*8, kernel_size=(3, 1, 1), stride=(1, 1, 1), padding=(1, 0, 0))
 
         print("num feat:", num_feat)
         print("num_feat + num growch * 2:", num_feat+num_grow_ch*2)
 
-        self.up1 = nn.ConvTranspose2d(num_feat+num_grow_ch*4, num_feat, kernel_size=2, stride=2)
-        self.up2 = nn.ConvTranspose2d(num_feat, 1, kernel_size=2, stride=2)
+        self.up1 = nn.ConvTranspose2d(num_feat*8, num_feat*4, kernel_size=1, stride=1)
+        self.up2 = nn.ConvTranspose2d(num_feat*4, num_feat*2, kernel_size=1, stride=1)
+        self.up3 = nn.ConvTranspose2d(num_feat*2, 3, kernel_size=1, stride=1)
 
         #self.up1 = nn.Conv2d(num_feat+num_grow_ch*4, num_feat+num_grow_ch*3, 3, 1, 1)
         #self.up2 = nn.Conv2d(num_feat+num_grow_ch*3, num_feat+num_grow_ch*2, 3, 1, 1)
