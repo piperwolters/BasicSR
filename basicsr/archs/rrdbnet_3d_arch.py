@@ -35,7 +35,6 @@ class ResidualDenseBlock(nn.Module):
         x3 = self.lrelu(self.conv3(torch.cat((x, x1, x2), 1)))
         x4 = self.lrelu(self.conv4(torch.cat((x, x1, x2, x3), 1)))
         x5 = self.conv5(torch.cat((x, x1, x2, x3, x4), 1))
-        print('x1:', x1.shape, ' x2:', x2.shape, ' x3:', x3.shape, ' x4:', x4.shape, ' x5:', x5.shape)
         # Empirically, we use 0.2 to scale the residual for better performance
         return x5 * 0.2 + x
 
@@ -58,11 +57,8 @@ class RRDB(nn.Module):
 
     def forward(self, x):
         out = self.rdb1(x)
-        print('rdb1:', out.shape)
         out = self.rdb2(out)
-        print('rdb2:', out.shape)
         out = self.rdb3(out)
-        print('rdb3:', out.shape)
         # Empirically, we use 0.2 to scale the residual for better performance
         return out * 0.2 + x
 
@@ -113,7 +109,6 @@ class RRDBNet3D(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
     def forward(self, x):
-        print("x:", x.shape)
         if self.scale == 2:
             feat = pixel_unshuffle(x, scale=2)
         elif self.scale == 1:
@@ -121,9 +116,7 @@ class RRDBNet3D(nn.Module):
         else:
             feat = x
         feat = self.conv_first(feat)
-        print("first conv:", feat.shape)
         body_feat = self.conv_body(self.body(feat))
-        print("body:", body_feat.shape)
         feat = feat + body_feat
         # upsample
         feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
