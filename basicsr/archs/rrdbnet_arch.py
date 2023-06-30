@@ -117,11 +117,14 @@ class RRDBNet(nn.Module):
         else:
             feat = x
         feat = self.conv_first(feat)
+        print("feat:", feat.shape)
         body_feat = self.conv_body(self.body(feat))
+        print("body feat:", body_feat.shape)
         feat = feat + body_feat
         # upsample
         feat = self.lrelu(self.conv_up1(F.interpolate(feat, scale_factor=2, mode='nearest')))
         feat = self.lrelu(self.conv_up2(F.interpolate(feat, scale_factor=2, mode='nearest')))
+        print("feat:", feat.shape)
 
         # Additional upsampling if doing x8 or x16.
         if self.scale == 8 or self.scale == 16:
