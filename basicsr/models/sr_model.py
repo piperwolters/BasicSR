@@ -122,9 +122,7 @@ class SRModel(BaseModel):
         if hasattr(self, 'net_g_ema'):
             self.net_g_ema.eval()
             with torch.no_grad():
-                print("self.lq:", self.lq.shape)
                 self.output = self.net_g_ema(self.lq)
-                print("test output:", self.output.shape)
         else:
             self.net_g.eval()
             with torch.no_grad():
@@ -201,11 +199,8 @@ class SRModel(BaseModel):
         if use_pbar:
             pbar = tqdm(total=len(dataloader), unit='image')
 
-        import time
-        print("beg of val loop 1:", time.perf_counter())
         for idx, val_data in enumerate(dataloader):
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
-
             # TODO: need to deal with batch sizes here
             #img_name = str(val_data['Index'].item())
 
@@ -225,7 +220,6 @@ class SRModel(BaseModel):
             del self.output
             torch.cuda.empty_cache()
 
-            print("end of val loop:", time.perf_counter())
             if save_img:
                 if self.opt['is_train']:
                     save_img_path = osp.join(self.opt['path']['visualization'], img_name,
