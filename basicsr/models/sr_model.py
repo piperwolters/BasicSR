@@ -122,7 +122,9 @@ class SRModel(BaseModel):
         if hasattr(self, 'net_g_ema'):
             self.net_g_ema.eval()
             with torch.no_grad():
+                print("self.lq:", self.lq.shape)
                 self.output = self.net_g_ema(self.lq)
+                print("test output:", self.output.shape)
         else:
             self.net_g.eval()
             with torch.no_grad():
