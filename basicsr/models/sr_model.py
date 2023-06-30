@@ -200,8 +200,8 @@ class SRModel(BaseModel):
             pbar = tqdm(total=len(dataloader), unit='image')
 
         import time
+        print("beg of val loop 1:", time.perf_counter())
         for idx, val_data in enumerate(dataloader):
-            print("beg of val loop 1:", time.perf_counter())
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
 
             # TODO: need to deal with batch sizes here
