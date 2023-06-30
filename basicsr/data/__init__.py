@@ -78,6 +78,7 @@ def build_dataloader(dataset, dataset_opt, num_gpu=1, dist=False, sampler=None, 
         batch_size = 1 if not 'batch_size_per_gpu' in dataset_opt else dataset_opt['batch_size_per_gpu']
         num_workers = 1 if not 'num_workers_per_gpu' in dataset_opt else dataset_opt['num_worker_per_gpu']
         dataloader_args = dict(dataset=dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+        print("val:", batch_size, num_workers)
     else:
         raise ValueError(f"Wrong dataset phase: {phase}. Supported ones are 'train', 'val' and 'test'.")
 
