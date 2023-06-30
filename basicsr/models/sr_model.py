@@ -199,7 +199,9 @@ class SRModel(BaseModel):
         if use_pbar:
             pbar = tqdm(total=len(dataloader), unit='image')
 
+        import time
         for idx, val_data in enumerate(dataloader):
+            print("beg of val loop 1:", time.perf_counter())
             #img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
 
             # TODO: need to deal with batch sizes here
@@ -221,6 +223,7 @@ class SRModel(BaseModel):
             del self.output
             torch.cuda.empty_cache()
 
+            print("end of val loop:", time.perf_counter())
             if save_img:
                 if self.opt['is_train']:
                     save_img_path = osp.join(self.opt['path']['visualization'], img_name,
