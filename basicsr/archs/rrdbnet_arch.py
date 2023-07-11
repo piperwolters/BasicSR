@@ -110,10 +110,6 @@ class RRDBNet(nn.Module):
         self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
     def forward(self, x):
-        spatial_dim = x.shape[2]
-        print("spatial dim:", spatial_dim)
-        print("self scale:", self.scale)
-
         if self.scale == 2:
             feat = pixel_unshuffle(x, scale=2)
         elif self.scale == 1:
