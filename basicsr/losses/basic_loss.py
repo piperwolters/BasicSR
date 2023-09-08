@@ -201,7 +201,7 @@ class PerceptualLoss(nn.Module):
 
             self.resnet.load_state_dict(new_keys, strict=False)
 
-            self.layer_weights = [0.1, 0.1, 0.1, 1, 1, 1, 1]
+            self.layer_weights = [0.1, 0.1, 0.1, 0.1, 1, 1, 1, 1]
         else:
             self.vgg = VGGFeatureExtractor(
                 layer_name_list=list(layer_weights.keys()),
