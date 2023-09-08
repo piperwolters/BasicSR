@@ -181,6 +181,7 @@ class PerceptualLoss(nn.Module):
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
         self.layer_weights = layer_weights
+        print("self.layer_weights:", self.layer_weights)
 
         # Specific case when we pass in pretrained ResNet weights to use instead of VGG.
         if vgg_type == 'caco_resnet':
@@ -199,6 +200,8 @@ class PerceptualLoss(nn.Module):
                 new_keys[resnet_key] = perceptual_weights[pk]
 
             self.resnet.load_state_dict(new_keys, strict=False)
+
+            self.layer_weights = [0.1, 0.1, 0.1, 1, 1, 1, 1]
         else:
             self.vgg = VGGFeatureExtractor(
                 layer_name_list=list(layer_weights.keys()),
@@ -229,25 +232,37 @@ class PerceptualLoss(nn.Module):
         """
 
         if self.vgg_type == 'caco_resnet':
+            print("caco resnet forward")
             x_features, gt_features = {}, {}
 
             # Save feature maps at each layer for both the ground truth and generated output.
             self.layer_name_list = list(self.resnet.state_dict().keys())
+            print("self.layer_name_list:", self.layer_name_list)
             for key, layer in self.resnet._modules.items():
+                print("resnet modules:", key, layer)
                 x = layer(x)
                 gt = layer(gt)
-                if key in self.layer_name_list:
-                    x_features[key] = x.clone()
-                    gt_features[key] = gt.clone()
+                print("layer:", x.shape, gt.shape)
+                #if key in self.layer_name_list:
+                x_features[key] = x.clone()
+                gt_features[key] = gt.clone()
+            print("x_features.keys():", x_features.keys())
+            print("x_features:", x_features['0'].shape)
+            print("gt_features.keys():", gt_features.keys()) 
+            print("gt_features:", gt_features['0'].shape)
 
             if self.perceptual_weight > 0:
+                print("perceptual weight > 0")
                 # calculate perceptual loss
                 percep_loss = 0
-                for k in x_features.keys():
+                for i,k in enumerate(['0', '1', '2', '3', '4', '5', '6', '7']):
+                    print("k in x features.keys():", k)
+                    print("gt_features[k]:", gt_features[k].shape, " x_features[k]:", x_features[k].shape)
                     if self.criterion_type == 'fro':
-                        percep_loss += torch.norm(x_features[k] - gt_features[k], p='fro') * self.layer_weights[k]
+                        percep_loss += torch.norm(x_features[k] - gt_features[k], p='fro') * self.layer_weights[i]
                     else:
-                        percep_loss += self.criterion(x_features[k], gt_features[k]) * self.layer_weights[k]
+                        percep_loss += self.criterion(x_features[k], gt_features[k]) * self.layer_weights[i]
+                    print("percep loss:", percep_loss)
                 percep_loss *= self.perceptual_weight
             else:
                 percep_loss = None
