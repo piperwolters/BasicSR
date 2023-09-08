@@ -181,11 +181,10 @@ class PerceptualLoss(nn.Module):
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
         self.layer_weights = layer_weights
-        print("self.layer_weights:", self.layer_weights)
 
         # Specific case when we pass in pretrained ResNet weights to use instead of VGG.
         if vgg_type == 'caco_resnet':
-            print("found vggg type ", vgg_type, " with ", caco_resnet_weights)
+            print("Utilizing a pretrained ResNet50 for perceptual loss.")
             perceptual_weights = torch.load(caco_resnet_weights) #torch.load('weights/resnet50_caco_1m.pth')
             self.resnet = torchvision.models.resnet50()
             self.resnet = torch.nn.Sequential(*(list(self.resnet.children())[:-2])).cuda()
@@ -232,37 +231,24 @@ class PerceptualLoss(nn.Module):
         """
 
         if self.vgg_type == 'caco_resnet':
-            print("caco resnet forward")
             x_features, gt_features = {}, {}
 
             # Save feature maps at each layer for both the ground truth and generated output.
             self.layer_name_list = list(self.resnet.state_dict().keys())
-            print("self.layer_name_list:", self.layer_name_list)
             for key, layer in self.resnet._modules.items():
-                print("resnet modules:", key, layer)
                 x = layer(x)
                 gt = layer(gt)
-                print("layer:", x.shape, gt.shape)
-                #if key in self.layer_name_list:
                 x_features[key] = x.clone()
                 gt_features[key] = gt.clone()
-            print("x_features.keys():", x_features.keys())
-            print("x_features:", x_features['0'].shape)
-            print("gt_features.keys():", gt_features.keys()) 
-            print("gt_features:", gt_features['0'].shape)
 
             if self.perceptual_weight > 0:
-                print("perceptual weight > 0")
                 # calculate perceptual loss
                 percep_loss = 0
                 for i,k in enumerate(['0', '1', '2', '3', '4', '5', '6', '7']):
-                    print("k in x features.keys():", k)
-                    print("gt_features[k]:", gt_features[k].shape, " x_features[k]:", x_features[k].shape)
                     if self.criterion_type == 'fro':
                         percep_loss += torch.norm(x_features[k] - gt_features[k], p='fro') * self.layer_weights[i]
                     else:
                         percep_loss += self.criterion(x_features[k], gt_features[k]) * self.layer_weights[i]
-                    print("percep loss:", percep_loss)
                 percep_loss *= self.perceptual_weight
             else:
                 percep_loss = None
@@ -270,7 +256,7 @@ class PerceptualLoss(nn.Module):
             # calculate style loss
             if self.style_weight > 0:
                 style_loss = 0
-                for k in x_features.keys():
+                for i,k in enumerate(['0', '1', '2', '3', '4', '5', '6', '7']):
                     if self.criterion_type == 'fro':
                         style_loss += torch.norm(
                             self._gram_mat(x_features[k]) - self._gram_mat(gt_features[k]), p='fro') * self.layer_weights[k]
