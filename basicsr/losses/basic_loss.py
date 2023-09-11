@@ -176,7 +176,7 @@ class PerceptualLoss(nn.Module):
                  perceptual_weight=1.0,
                  style_weight=0.,
                  criterion='l1',
-                 caco_resnet_weights=None):
+                 model_weights=None):
         super(PerceptualLoss, self).__init__()
         self.perceptual_weight = perceptual_weight
         self.style_weight = style_weight
@@ -185,7 +185,7 @@ class PerceptualLoss(nn.Module):
         # Specific case when we pass in pretrained ResNet weights to use instead of VGG.
         if vgg_type == 'caco_resnet':
             print("Utilizing a pretrained ResNet50 for perceptual loss.")
-            perceptual_weights = torch.load(caco_resnet_weights) #torch.load('weights/resnet50_caco_1m.pth')
+            perceptual_weights = torch.load(model_weights) #torch.load('weights/resnet50_caco_1m.pth')
             self.resnet = torchvision.models.resnet50()
             self.resnet = torch.nn.Sequential(*(list(self.resnet.children())[:-2])).cuda()
 
@@ -199,8 +199,25 @@ class PerceptualLoss(nn.Module):
                 new_keys[resnet_key] = perceptual_weights[pk]
 
             self.resnet.load_state_dict(new_keys, strict=False)
-
             self.layer_weights = [0.1, 0.1, 0.1, 0.1, 1, 1, 1, 1]
+        elif vgg_type == 'rrsgan_vgg19':
+            print("Utilizing a remote-sensing pretrained VGG19 for perceptual loss.")
+            perceptual_weights = torch.load(model_weights)  # weights/vgg19-dcbb9e9d.pth
+
+            self.vgg = VGGFeatureExtractor(
+                layer_name_list=list(layer_weights.keys()),
+                vgg_type='vgg19',
+                use_input_norm=use_input_norm,
+                range_norm=range_norm)
+
+            new_keys = {}
+            perceptual_keys = list(perceptual_weights.keys())
+            for i,resnet_key in enumerate(self.vgg.vgg_net.state_dict().keys()):
+                pk = perceptual_keys[i]
+                new_keys[resnet_key] = None
+                new_keys[resnet_key] = perceptual_weights[pk]
+
+            self.vgg.vgg_net.load_state_dict(new_keys)
         else:
             self.vgg = VGGFeatureExtractor(
                 layer_name_list=list(layer_weights.keys()),
@@ -266,7 +283,6 @@ class PerceptualLoss(nn.Module):
                 style_loss *= self.style_weight
             else:
                 style_loss = None
-
         else:
             # extract vgg features
             x_features = self.vgg(x)
