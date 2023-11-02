@@ -158,8 +158,8 @@ class EvaSimLoss(nn.Module):
         x_feats = self.sim_model(preprocess_x)
         gt_feats = self.sim_model(preprocess_gt)
 
-        print("in eva sim loss...", x_feats.shape, gt_feats.shape)
-        return 1.0
+        l1 = l1_loss(x_feats, gt_feats)
+        return l1
 
 @LOSS_REGISTRY.register()
 class PerceptualLoss(nn.Module):
