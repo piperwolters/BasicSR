@@ -152,6 +152,9 @@ class EvaSimLoss(nn.Module):
         self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
 
     def forward(self, x, gt):
+        x = F.interpolate(x, (224, 224))
+        gt = F.interpolate(x, (224, 224))
+
         x_feats = self.sim_model(x)
         gt_feats = self.sim_model(gt)
 
