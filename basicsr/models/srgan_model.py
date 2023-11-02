@@ -65,6 +65,7 @@ class SRGANModel(SRModel):
             self.cri_gan = build_loss(train_opt['gan_opt']).to(self.device)
 
         if train_opt.get('eva_score_opt'):
+            print("train_opt.get(eva_score_opt)")
             self.eva_sim = build_loss(train_opt['eva_score_opt']).to(self.device)
 
         self.net_d_iters = train_opt.get('net_d_iters', 1)
