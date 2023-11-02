@@ -149,14 +149,11 @@ class EvaSimLoss(nn.Module):
     
     def __init__(self):
         super(EvaSimLoss, self).__init__()
-        self.eva_plus, _, self.preprocess = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
+        self.eva_plus, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
 
     def forward(self, x, gt):
-        preprocess_x = self.preprocess(x)
-        preprocess_gt = self.preprocess(gt)
-
-        x_feats = self.sim_model(preprocess_x)
-        gt_feats = self.sim_model(preprocess_gt)
+        x_feats = self.sim_model(x)
+        gt_feats = self.sim_model(gt)
 
         l1 = l1_loss(x_feats, gt_feats)
         return l1
