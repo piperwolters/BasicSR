@@ -155,10 +155,14 @@ class EvaSimLoss(nn.Module):
         x = F.interpolate(x, (224, 224))
         gt = F.interpolate(x, (224, 224))
 
-        x_feats = self.sim_model(x)
-        gt_feats = self.sim_model(gt)
+        batch_losses = []
+        for b in range(x.shape[0]):
+            x_feats = self.sim_model(x[b, :, :, :])
+            gt_feats = self.sim_model(gt[b, :, :, :])
+            l1 = l1_loss(x_feats, gt_feats)
+            batch_losses.append(l1)
 
-        l1 = l1_loss(x_feats, gt_feats)
+        l1 = torch.mean(torch.stack(batch_losses))
         return l1
 
 @LOSS_REGISTRY.register()
