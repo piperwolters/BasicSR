@@ -1,4 +1,5 @@
 import torch
+import open_clip
 import torchvision
 from torch import nn as nn
 from torch.nn import functional as F
@@ -143,6 +144,21 @@ class WeightedTVLoss(L1Loss):
 
         return loss
 
+@LOSS_REGISTRY.register()
+class EvaSimLoss(nn.Module):
+    
+    def __init__(self):
+        self.eva_plus, _, self.preprocess = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
+
+    def forward(self, x, gt):
+        preprocess_x = self.preprocess(x)
+        preprocess_gt = self.preprocess(gt)
+
+        x_feats = self.sim_model(preprocess_x)
+        gt_feats = self.sim_model(preprocess_gt)
+
+        print("in eva sim loss...", x_feats.shape, gt_feats.shape)
+        return 1.0
 
 @LOSS_REGISTRY.register()
 class PerceptualLoss(nn.Module):
