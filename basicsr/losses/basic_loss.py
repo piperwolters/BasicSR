@@ -157,8 +157,8 @@ class EvaSimLoss(nn.Module):
 
         batch_losses = []
         for b in range(x.shape[0]):
-            x_feats = self.sim_model(x[b, :, :, :])
-            gt_feats = self.sim_model(gt[b, :, :, :])
+            x_feats = self.sim_model(x[b, :, :, :].unsqueeze(0))
+            gt_feats = self.sim_model(gt[b, :, :, :].unsqueeze(0))
             l1 = l1_loss(x_feats, gt_feats)
             batch_losses.append(l1)
 
