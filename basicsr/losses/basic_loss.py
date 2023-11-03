@@ -153,7 +153,7 @@ class EvaSimLoss(nn.Module):
 
     def forward(self, x, gt):
         x = F.interpolate(x, (224, 224))
-        gt = F.interpolate(x, (224, 224))
+        gt = F.interpolate(gt, (224, 224))
 
         x_feats = self.sim_model.encode_image(x)
         gt_feats = self.sim_model.encode_image(gt)
