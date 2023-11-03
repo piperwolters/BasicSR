@@ -1,4 +1,5 @@
 import torch
+import clip
 import open_clip
 import torchvision
 from torch import nn as nn
@@ -149,7 +150,8 @@ class EvaSimLoss(nn.Module):
     
     def __init__(self):
         super(EvaSimLoss, self).__init__()
-        self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
+        #self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
+        self.sim_model, _ = clip.load("RN50")
 
     def forward(self, x, gt):
         x = F.interpolate(x, (224, 224))
