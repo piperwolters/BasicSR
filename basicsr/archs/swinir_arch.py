@@ -723,6 +723,8 @@ class SwinIR(nn.Module):
                  img_size=64,
                  patch_size=1,
                  in_chans=3,
+                 out_chans=3,
+                 num_feat=64,
                  embed_dim=96,
                  depths=(6, 6, 6, 6),
                  num_heads=(6, 6, 6, 6),
@@ -744,8 +746,8 @@ class SwinIR(nn.Module):
                  **kwargs):
         super(SwinIR, self).__init__()
         num_in_ch = in_chans
-        num_out_ch = in_chans
-        num_feat = 64
+        num_out_ch = out_chans
+        num_feat = num_feat
         self.img_range = img_range
         if in_chans == 3:
             rgb_mean = (0.4488, 0.4371, 0.4040)
