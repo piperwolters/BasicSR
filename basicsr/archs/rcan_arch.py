@@ -122,7 +122,7 @@ class RCAN(nn.Module):
         self.conv_last = nn.Conv2d(num_feat, num_out_ch, 3, 1, 1)
 
     def forward(self, x):
-        self.mean = self.mean.type_as(x)
+        self.mean = self.mean.type_as(x[:, :3, :, :])  # just taking first s2 image 
 
         x = (x - self.mean) * self.img_range
         x = self.conv_first(x)
