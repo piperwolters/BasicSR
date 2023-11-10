@@ -124,8 +124,6 @@ def parse_options(root_path, is_train=True):
             init_dist(args.launcher)
     opt['rank'], opt['world_size'] = get_dist_info()
 
-    torch.cuda.set_device(opt['rank'])
-
     # random seed
     seed = opt.get('manual_seed')
     if seed is None:
