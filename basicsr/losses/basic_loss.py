@@ -149,12 +149,15 @@ class WeightedTVLoss(L1Loss):
 @LOSS_REGISTRY.register()
 class CLIPLoss(nn.Module):
     
-    def __init__(self):
+    def __init__(self, clip_loss_model):
         super(CLIPLoss, self).__init__()
         
-        #self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
-        self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
-        #self.sim_model, _ = clip.load("RN50")
+        if clip_loss_model == 'EVA02-E-14-plus':
+            self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
+        elif clip_loss_model == 'ViT-B-16-SigLIP-256'
+            self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
+        elif clip_loss_model == 'RN50':
+            self.sim_model, _ = clip.load("RN50")
 
         self.normalize = Normalize(mean=OPENAI_DATASET_MEAN, std=OPENAI_DATASET_STD)
 
