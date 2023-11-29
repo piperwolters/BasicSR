@@ -4,6 +4,7 @@ import open_clip
 import torchvision
 from torch import nn as nn
 from torch.nn import functional as F
+from torchvision.transforms import Normalize
 
 from basicsr.archs.vgg_arch import VGGFeatureExtractor
 from basicsr.utils.registry import LOSS_REGISTRY
