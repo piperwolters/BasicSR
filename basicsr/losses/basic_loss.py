@@ -154,7 +154,7 @@ class CLIPLoss(nn.Module):
         
         if clip_loss_model == 'EVA02-E-14-plus':
             self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
-        elif clip_loss_model == 'ViT-B-16-SigLIP-256'
+        elif clip_loss_model == 'ViT-B-16-SigLIP-256':
             self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
         elif clip_loss_model == 'RN50':
             self.sim_model, _ = clip.load("RN50")
