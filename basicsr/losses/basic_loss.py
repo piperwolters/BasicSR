@@ -147,10 +147,10 @@ class WeightedTVLoss(L1Loss):
         return loss
 
 @LOSS_REGISTRY.register()
-class EvaSimLoss(nn.Module):
+class CLIPLoss(nn.Module):
     
     def __init__(self):
-        super(EvaSimLoss, self).__init__()
+        super(CLIPLoss, self).__init__()
         
         #self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
         self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
