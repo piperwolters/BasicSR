@@ -154,17 +154,20 @@ class CLIPLoss(nn.Module):
         super(CLIPLoss, self).__init__()
         
         if clip_loss_model == 'EVA02-E-14-plus':
+            self.img_size = (224,224)
             self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
         elif clip_loss_model == 'ViT-B-16-SigLIP-256':
+            self.img_size = (256,256)
             self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
         elif clip_loss_model == 'RN50':
+            self.img_size = (224,224)
             self.sim_model, _ = clip.load("RN50")
 
         self.normalize = Normalize(mean=OPENAI_DATASET_MEAN, std=OPENAI_DATASET_STD)
 
     def forward(self, x, gt):
-        x = F.interpolate(x, (224, 224))
-        gt = F.interpolate(gt, (224, 224))
+        x = F.interpolate(x, self.img_size)
+        gt = F.interpolate(gt, self.img_size)
 
         x = self.normalize(x)
         gt = self.normalize(gt)
