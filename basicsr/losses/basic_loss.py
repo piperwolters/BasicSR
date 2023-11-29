@@ -10,7 +10,8 @@ from basicsr.utils.registry import LOSS_REGISTRY
 from .loss_util import weighted_loss
 
 _reduction_modes = ['none', 'mean', 'sum']
-
+OPENAI_DATASET_MEAN = (0.48145466, 0.4578275, 0.40821073)
+OPENAI_DATASET_STD = (0.26862954, 0.26130258, 0.27577711)
 
 @weighted_loss
 def l1_loss(pred, target):
@@ -150,12 +151,20 @@ class EvaSimLoss(nn.Module):
     
     def __init__(self):
         super(EvaSimLoss, self).__init__()
+        
         #self.sim_model, _, _ = open_clip.create_model_and_transforms('EVA02-E-14-plus', pretrained='laion2b_s9b_b144k')
-        self.sim_model, _ = clip.load("RN50")
+        self.sim_model, _, _ = open_clip.create_model_and_transforms('ViT-B-16-SigLIP-256', pretrained='webli')
+        #self.sim_model, _ = clip.load("RN50")
+
+        self.normalize = Normalize(mean=OPENAI_DATASET_MEAN, std=OPENAI_DATASET_STD)
 
     def forward(self, x, gt):
         x = F.interpolate(x, (224, 224))
         gt = F.interpolate(gt, (224, 224))
+
+        x = self.normalize(x)
+        gt = self.normalize(gt)
+        print("range:", torch.min(x), torch.max(x), torch.min(gt), torch.max(gt))
 
         x_feats = self.sim_model.encode_image(x)
         gt_feats = self.sim_model.encode_image(gt)
