@@ -171,7 +171,6 @@ class CLIPLoss(nn.Module):
 
         x = self.normalize(x)
         gt = self.normalize(gt)
-        print("range:", torch.min(x), torch.max(x), torch.min(gt), torch.max(gt))
 
         x_feats = self.sim_model.encode_image(x)
         gt_feats = self.sim_model.encode_image(gt)
