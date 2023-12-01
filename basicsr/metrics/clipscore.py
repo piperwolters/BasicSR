@@ -2,6 +2,8 @@ import clip
 import open_clip
 import torch.nn.functional as F
 
+from basicsr.utils.registry import METRIC_REGISTRY
+
 @METRIC_REGISTRY.register()
 def calculate_clipscore(img1, img2, clip_model):
     print("imgs:", img1.shape, img2.shape, clip_model)
