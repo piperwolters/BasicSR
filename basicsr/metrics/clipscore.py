@@ -13,6 +13,8 @@ def calculate_clipscore(img, img2, clip_model='clipa', **kwargs):
     if clip_model == 'clipa':
         img_size = (224,224)
         model, _, _ = open_clip.create_model_and_transforms('ViT-bigG-14-CLIPA-336', pretrained='datacomp1b')
+    else:
+        print("Currently the only CLIP models supported are ['clipa'].")
 
     img = F.interpolate(img, img_size)
     img2 = F.interpolate(img2, img_size)
