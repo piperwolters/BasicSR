@@ -16,11 +16,11 @@ def calculate_clipscore(img, img2, clip_model='clipa', **kwargs):
     else:
         print("Currently the only CLIP models supported are ['clipa'].")
 
-    img = F.interpolate(img, img_size)
-    img2 = F.interpolate(img2, img_size)
+    img = F.interpolate(torch.tensor(img), img_size)
+    img2 = F.interpolate(torch.tensor(img2), img_size)
 
-    img1_feats = model(img)
-    img2_feats = model(img2)
+    img1_feats = model.encode_image(img)
+    img2_feats = model.encode_image(img2)
 
     sim_score = F.cosine_similarity(img1_feats, img2_feats)
     return sim_score
