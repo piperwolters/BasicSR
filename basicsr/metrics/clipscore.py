@@ -17,8 +17,8 @@ def calculate_clipscore(img, img2, clip_model='clipa', **kwargs):
     else:
         print("Currently the only CLIP models supported are ['clipa'].")
 
-    img = torch.transpose(torch.from_numpy(img), (2, 1, 0)).unsqueeze(0)
-    img2 = torch.transpose(torch.from_numpy(img2), (2, 1, 0)).unsqueeze(0)
+    img = torch.permute(torch.from_numpy(img), (2, 1, 0)).unsqueeze(0)
+    img2 = torch.permute(torch.from_numpy(img2), (2, 1, 0)).unsqueeze(0)
 
     img = F.interpolate(img, img_size)
     img2 = F.interpolate(img2, img_size)
