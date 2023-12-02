@@ -27,8 +27,9 @@ def calculate_clipscore(img, img2, clip_model='clipa', **kwargs):
     img = F.interpolate(img, img_size)
     img2 = F.interpolate(img2, img_size)
 
+    print("shape:", img.shape, img2.shape)
     img1_feats = model.encode_image(img)
     img2_feats = model.encode_image(img2)
 
-    sim_score = F.cosine_similarity(img1_feats, img2_feats)
+    sim_score = F.cosine_similarity(img1_feats, img2_feats).detach().item()
     return sim_score
