@@ -1,4 +1,5 @@
 import torch
+import torchvision
 import clip
 import open_clip
 import torch.nn.functional as F
@@ -17,8 +18,11 @@ def calculate_clipscore(img, img2, clip_model='clipa', **kwargs):
     else:
         print("Currently the only CLIP models supported are ['clipa'].")
 
-    img = torch.permute(torch.from_numpy(img), (2, 1, 0)).unsqueeze(0)
-    img2 = torch.permute(torch.from_numpy(img2), (2, 1, 0)).unsqueeze(0)
+    #img = torch.permute(torch.from_numpy(img), (2, 1, 0)).unsqueeze(0)
+    #img2 = torch.permute(torch.from_numpy(img2), (2, 1, 0)).unsqueeze(0)
+
+    img = torchvision.transforms.functional.to_tensor(img).unsqueeze(0)
+    img2 = torchvision.transforms.functional.to_tensor(img2).unsqueeze(0)
 
     img = F.interpolate(img, img_size)
     img2 = F.interpolate(img2, img_size)
